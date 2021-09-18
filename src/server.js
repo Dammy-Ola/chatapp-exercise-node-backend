@@ -5,6 +5,7 @@ const connectDB = require('../config/db')
 
 // Bringing in the route files
 const channels = require('./routes/channels')
+const messages = require('./routes/messages')
 
 // Bringing in our environment variable file
 dotenv.config({ path: './config/config.env' })
@@ -17,6 +18,7 @@ const app = express()
 
 // Mouting or using the routes or routers
 app.use('/api/v1/channels', channels)
+app.use('/api/v1/messages', messages)
 
 const PORT = process.env.PORT || 5000
 
