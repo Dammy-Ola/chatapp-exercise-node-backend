@@ -16,6 +16,9 @@ connectDB()
 // Initialiazing our app variable for express
 const app = express()
 
+// Express body parser
+app.use(express.json())
+
 // Mouting or using the routes or routers
 app.use('/api/v1/channels', channels)
 app.use('/api/v1/messages', messages)

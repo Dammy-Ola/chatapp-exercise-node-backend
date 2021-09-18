@@ -5,7 +5,9 @@ const Channel = require('../models/Channel')
 // @access      Private
 exports.getChannels = async (req, res, next) => {
   try {
-    const channels = await Channel.find()
+    const channels = await Channel.find().populate({
+      path: 'messages',
+    })
 
     res.status(200).json({
       success: true,
@@ -15,6 +17,7 @@ exports.getChannels = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({
       success: false,
+      error: err.message,
     })
   }
 }
@@ -29,6 +32,7 @@ exports.getChannel = async (req, res, next) => {
     if (!channel) {
       return res.status(500).json({
         success: false,
+        error: err.message,
       })
     }
 
@@ -39,6 +43,7 @@ exports.getChannel = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({
       success: false,
+      error: err.message,
     })
   }
 }
@@ -57,6 +62,7 @@ exports.createChannel = async (req, res, next) => {
   } catch (err) {
     res.status(500).json({
       success: false,
+      error: err.message,
     })
   }
 }

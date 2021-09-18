@@ -8,6 +8,7 @@ const {
 const router = express.Router()
 
 router.route('/').get(getMessages).post(createMessage)
+router.route('/:channelId').post(createMessage)
 router.route('/:id').get(getMessage)
 
 module.exports = router

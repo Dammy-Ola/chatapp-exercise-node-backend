@@ -6,6 +6,11 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Type a Message'],
     },
+    channel: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Channel',
+    },
   },
   {
     timestamps: true,
