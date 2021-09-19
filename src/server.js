@@ -1,14 +1,21 @@
 const express = require('express')
-const dotenv = require('dotenv')
-const colors = require('colors')
+const cookieSession = require('cookie-session')
 const connectDB = require('../config/db')
+const cors = require('cors')
+const colors = require('colors')
+const dotenv = require('dotenv')
+const passport = require('passport')
 
 // Bringing in the route files
+const auth = require('./routes/auth')
 const channels = require('./routes/channels')
 const messages = require('./routes/messages')
 
 // Bringing in our environment variable file
 dotenv.config({ path: './config/config.env' })
+
+// Passport config
+require('../config/passport')
 
 // Connect to the database
 connectDB()
@@ -18,8 +25,25 @@ const app = express()
 
 // Express body parser
 app.use(express.json())
+app.set('trust proxy', 1)
+app.use(
+  cookieSession({
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY],
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    saveUninitialized: false,
+    resave: false,
+  })
+)
+
+// using passport middleware
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Mouting or using the routes or routers
+app.use('/api/v1/auth', auth)
 app.use('/api/v1/channels', channels)
 app.use('/api/v1/messages', messages)
 
