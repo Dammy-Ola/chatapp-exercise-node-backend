@@ -5,6 +5,7 @@ const cors = require('cors')
 const colors = require('colors')
 const dotenv = require('dotenv')
 const passport = require('passport')
+const errorHandler = require('./middleware/error')
 
 // Bringing in the route files
 const auth = require('./routes/auth')
@@ -46,6 +47,9 @@ app.use(passport.session())
 app.use('/api/v1/auth', auth)
 app.use('/api/v1/channels', channels)
 app.use('/api/v1/messages', messages)
+
+// Using the errorHandler middleware
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 
