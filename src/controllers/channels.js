@@ -7,7 +7,18 @@ const ErrorResponse = require('../utils/errorResponse')
 // @route       GET /api/v1/channels
 // @access      Private
 exports.getChannels = asyncHandler(async (req, res, next) => {
-  const channels = await Channel.find()
+  let query
+
+  let queryStr = JSON.stringify(req.query)
+  queryStr = queryStr.replace(
+    /\b(eq|gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  )
+
+  console.log(queryStr)
+  query = Channel.find(JSON.parse(queryStr))
+
+  const channels = await query
     .populate({
       path: 'creator',
       select: 'name email',
