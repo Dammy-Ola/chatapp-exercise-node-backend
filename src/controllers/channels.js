@@ -6,24 +6,26 @@ const ErrorResponse = require('../utils/errorResponse')
 // @desc        Get all Channels
 // @route       GET /api/v1/channels
 // @access      Private
-exports.getChannels = async (req, res, next) => {
-  try {
-    const channels = await Channel.find().populate({
+exports.getChannels = asyncHandler(async (req, res, next) => {
+  const channels = await Channel.find()
+    .populate({
+      path: 'creator',
+      select: 'name email',
+    })
+    .populate({
       path: 'messages',
     })
+    .populate({
+      path: 'members',
+      select: 'name email',
+    })
 
-    res.status(200).json({
-      success: true,
-      count: channels.length,
-      data: channels,
-    })
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    })
-  }
-}
+  res.status(200).json({
+    success: true,
+    count: channels.length,
+    data: channels,
+  })
+})
 
 // @desc        Get A Single Channel
 // @route       GET /api/v1/channels/:id
@@ -37,6 +39,9 @@ exports.getChannel = asyncHandler(async (req, res, next) => {
     .populate({
       path: 'members',
       select: 'name email',
+    })
+    .populate({
+      path: 'messages',
     })
 
   if (!channel) {

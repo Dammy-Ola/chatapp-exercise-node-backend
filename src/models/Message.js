@@ -6,6 +6,11 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Type a Message'],
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, 'This channel must be created by a user'],
+      ref: 'User',
+    },
     channel: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
