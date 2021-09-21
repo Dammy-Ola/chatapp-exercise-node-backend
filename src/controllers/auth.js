@@ -32,9 +32,15 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     // 2. Adding user to the channel model
     await welcomeChannel.members.unshift(user)
     await welcomeChannel.save()
-    await welcomeChannel.populate({
-      path: 'users',
-    })
+    await welcomeChannel
+      .populate({
+        path: 'creator',
+        select: 'name email',
+      })
+      .populate({
+        path: 'members',
+        select: 'name email',
+      })
 
     // return registered user with the token
     if (user) {
