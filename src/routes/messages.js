@@ -4,11 +4,11 @@ const {
   createMessage,
   getMessage,
 } = require('../controllers/messages')
+const { protect } = require('../middleware/auth')
 
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 
-router.route('/').get(getMessages).post(createMessage)
-router.route('/:channelId').post(createMessage)
-router.route('/:id').get(getMessage)
+router.route('/').get(protect, getMessages).post(protect, createMessage)
+router.route('/:id').get(protect, getMessage)
 
 module.exports = router
