@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const colors = require('colors')
 
 const connectDB = async () => {
-  console.log(process.env.MONGO_URI_LOCAL)
   const DB_URI =
     process.env.NODE_ENV === 'production'
       ? process.env.MONGO_URI
