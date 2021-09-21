@@ -4,9 +4,10 @@ const {
   getChannels,
   getChannel,
 } = require('../controllers/channels')
+const { protect } = require('../middleware/auth')
 const router = express.Router()
 
-router.route('/').get(getChannels).post(createChannel)
-router.route('/:id').get(getChannel)
+router.route('/').get(protect, getChannels).post(protect, createChannel)
+router.route('/:id').get(protect, getChannel)
 
 module.exports = router

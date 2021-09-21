@@ -1,4 +1,5 @@
 const asyncHandler = require('../middleware/async')
+const Channel = require('../models/Channel')
 const User = require('../models/User')
 const ErrorResponse = require('../utils/errorResponse')
 const generateToken = require('../utils/generateToken')
@@ -18,17 +19,53 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
 
   const user = await User.create(req.body)
 
-  // return registered user with the token
-  if (user) {
-    const { _id, name, email } = user
-    return res.status(201).json({
-      _id,
-      name,
-      email,
-      token: generateToken(_id),
-    })
+  const channels = await Channel.find()
+  // checking if channel exist in the database
+  // 1. if it does, add registered user to the welcome channel by default
+  // 2. else, just register the user
+  if (channels.length > 0) {
+    // Adding user to the default channel by default
+    // 1. Adding channel to the user model
+    const welcomeChannel = await Channel.findOne({ name: 'Welcome Channel' })
+    await user.channels.unshift(welcomeChannel)
+    await user.save()
+    // 2. Adding user to the channel model
+    await welcomeChannel.members.unshift(user)
+    await welcomeChannel.save()
+    await welcomeChannel
+      .populate({
+        path: 'creator',
+        select: 'name email',
+      })
+      .populate({
+        path: 'members',
+        select: 'name email',
+      })
+
+    // return registered user with the token
+    if (user) {
+      const { _id, name, email } = user
+      return res.status(201).json({
+        _id,
+        name,
+        email,
+        token: generateToken(_id),
+        welcomeChannel,
+      })
+    } else {
+      return next(new ErrorResponse(`Invalid User Data`, 404))
+    }
   } else {
-    return next(new ErrorResponse(`Invalid User Data`, 404))
+    // Registering the user only, since no channel exist
+    if (user) {
+      const { _id, name, email } = user
+      return res.status(201).json({
+        _id,
+        name,
+        email,
+        token: generateToken(_id),
+      })
+    }
   }
 })
 

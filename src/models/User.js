@@ -22,6 +22,13 @@ const UserSchema = new mongoose.Schema(
       select: false,
       required: [true, 'The password field is required'],
     },
+    channels: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Channel',
+      },
+    ],
     // googleId: {
     //   type: String,
     //   required: true,
