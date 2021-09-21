@@ -10,6 +10,13 @@ const ChannelSchema = new mongoose.Schema(
       type: String,
       required: [true, 'The description of the channel is required'],
     },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User',
+      },
+    ],
     messages: [
       {
         type: mongoose.Schema.Types.ObjectId,
