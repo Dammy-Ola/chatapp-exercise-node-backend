@@ -24,6 +24,23 @@ connectDB()
 // Initialiazing our app variable for express
 const app = express()
 
+// Enabling cors
+const whitelist = [
+  process.env.CLIENT_ROUTE,
+  process.env.CLIENT_ROUTE_DEVELOPMENT,
+]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+
+app.use(cors(corsOptions))
+
 // Express body parser
 app.use(express.json())
 app.set('trust proxy', 1)
