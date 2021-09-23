@@ -27,12 +27,6 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     // Adding user to the default channel by default
     // 1. Adding channel to the user model
     const welcomeChannel = await Channel.findOne({ name: 'Welcome Channel' })
-    await user.channels.unshift(welcomeChannel)
-    await user.save()
-    // 2. Adding user to the channel model
-    await welcomeChannel.members.unshift(user)
-    await welcomeChannel.save()
-    await welcomeChannel
       .populate({
         path: 'creator',
         select: 'name email',
@@ -41,6 +35,12 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
         path: 'members',
         select: 'name email',
       })
+    await user.channels.unshift(welcomeChannel)
+    await user.save()
+    // 2. Adding user to the channel model
+    await welcomeChannel.members.unshift(user)
+    await welcomeChannel.save()
+    // await welcomeChannel
 
     // return registered user with the token
     if (user) {
