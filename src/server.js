@@ -31,10 +31,7 @@ const app = express()
 // ]
 
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === 'production'
-      ? process.env.CLIENT_ROUTE
-      : process.env.CLIENT_ROUTE_DEVELOPMENT,
+  origin: process.env.CLIENT_ROUTE || process.env.CLIENT_ROUTE_DEVELOPMENT,
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
