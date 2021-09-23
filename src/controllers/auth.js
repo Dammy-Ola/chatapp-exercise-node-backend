@@ -27,14 +27,14 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
     // Adding user to the default channel by default
     // 1. Adding channel to the user model
     const welcomeChannel = await Channel.findOne({ name: 'Welcome Channel' })
-      .populate({
-        path: 'creator',
-        select: 'name email',
-      })
-      .populate({
-        path: 'members',
-        select: 'name email',
-      })
+    // .populate({
+    //   path: 'creator',
+    //   select: 'name email',
+    // })
+    // .populate({
+    //   path: 'members',
+    //   select: 'name email',
+    // })
     await user.channels.unshift(welcomeChannel)
     await user.save()
     // 2. Adding user to the channel model
@@ -50,7 +50,7 @@ exports.registerUser = asyncHandler(async (req, res, next) => {
         name,
         email,
         token: generateToken(_id),
-        welcomeChannel,
+        // welcomeChannel,
       })
     } else {
       return next(new ErrorResponse(`Invalid User Data`, 404))
